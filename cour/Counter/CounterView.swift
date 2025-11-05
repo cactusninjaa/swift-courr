@@ -12,20 +12,35 @@ struct CounterView: View {
     var body: some View {
         VStack {
             Text("\(counterViewModel.counter)")
-            Button("Add +10") {
-                counterViewModel.add(number: 10)
+                .font(.largeTitle)
+                .padding(12)
+            
+            HStack{
+                Menu("Add value"){
+                    Button("+1") {
+                        counterViewModel.add(number: 1)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.blue)
+                    .clipShape(Circle())
+                    Button("+10") {
+                        counterViewModel.add(number: 10)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.blue)
+                    .clipShape(Circle())
+                }
+               
+                Button("Reset") {
+                    counterViewModel.reset()
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.main)
+                .tint(.white)
             }
-            .buttonStyle(.borderedProminent)
-            .tint(.blue)
-            Button("Reset") {
-                counterViewModel.reset()
-            }
-            .buttonStyle(.borderedProminent)
-            .tint(.red)
         }
-        .background(.teal)
-        .cornerRadius(16)
-        .padding()
+        .padding(120)
+        
     }
 }
 

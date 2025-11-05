@@ -1,23 +1,41 @@
 //
-//  ContentView.swift
+//  HomeView.swift
 //  cour
 //
 //  Created by thomas sauvage on 03/11/2025.
 //
 
 import SwiftUI
+import DesignSystem
 
 struct HomeView: View {
+    @State private var viewModel = HomeViewModel()
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        ZStack {
+            TouchTrackingView { touches in
+                viewModel.updateTouches(touches)
+            }
+            
+            ForEach(Array(viewModel.circles.keys), id: \.self) { id in
+                if let circle = viewModel.circles[id] {
+                    CircleView()
+                        .position(circle.position)
+                }
+            }
         }
-        .padding()
+        .background(Color.red.ignoresSafeArea())
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                NavigationLink(destination: SettingsView()) {
+                    Image(systemName: "gearshape")
+                        .imageScale(.large)
+                }
+            }
+        }
     }
 }
+
 
 #Preview {
     HomeView()

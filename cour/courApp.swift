@@ -11,23 +11,9 @@ import SwiftUI
 struct courApp: App {
     var body: some Scene {
         WindowGroup {
-            NavigationStack {
-
-                NavigationLink("Aller au compteur") {
-                    CounterView()
-                }
-                .navigationTitle("Conteur")
-                NavigationLink("Todo") {
-                    TodoView()
-                }
-                .navigationTitle("Todo")
-
-                NavigationLink("Profil") {
-                    ProfilView()
-                }
-                .navigationTitle("Profil")
-
-            }
-        }
+           NavigationStack {
+               HomeView()
+           }
+       }
     }
 }
