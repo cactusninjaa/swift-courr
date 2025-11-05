@@ -33,9 +33,22 @@
 		9838FB4D2EB89C1400BCA8C8 /* courUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = courUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		985CACFD2EBB6674001B0FBD /* Exceptions for "cour" folder in "cour" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Package/Users/thomassauvage/cour/swift/cour/Package/DesignSystem,
+			);
+			target = 9838FB342EB89C1300BCA8C8 /* cour */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		9838FB372EB89C1300BCA8C8 /* cour */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				985CACFD2EBB6674001B0FBD /* Exceptions for "cour" folder in "cour" target */,
+			);
 			path = cour;
 			sourceTree = "<group>";
 		};
@@ -211,7 +224,7 @@
 			mainGroup = 9838FB2C2EB89C1300BCA8C8;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				985CACBF2EBA10CB001B0FBD /* XCLocalSwiftPackageReference "../DesignSystem" */,
+				985CACFB2EBB6668001B0FBD /* XCLocalSwiftPackageReference "../../Desktop/DesignSystem" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9838FB362EB89C1300BCA8C8 /* Products */;
@@ -625,9 +638,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		985CACBF2EBA10CB001B0FBD /* XCLocalSwiftPackageReference "../DesignSystem" */ = {
+		985CACFB2EBB6668001B0FBD /* XCLocalSwiftPackageReference "../../Desktop/DesignSystem" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = ../DesignSystem;
+			relativePath = ../../Desktop/DesignSystem;
 		};
 /* End XCLocalSwiftPackageReference section */
 
