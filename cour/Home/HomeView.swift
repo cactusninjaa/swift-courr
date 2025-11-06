@@ -9,16 +9,35 @@ import SwiftUI
 import DesignSystem
 
 struct HomeView: View {
-    @State private var viewModel = HomeViewModel()
-    
+    @State private var homeViewModel = HomeViewModel()
+    @State private var settingsViewModel = SettingsViewModel()
+    @State private var countdownValue: Int? = nil
+
     var body: some View {
         ZStack {
-            TouchTrackingView { touches in
-                viewModel.updateTouches(touches)
+            TouchTrackingView(
+                onUpdate: { touches in
+                    homeViewModel.updateTouches(touches)
+                },
+                notificationsEnabled: settingsViewModel.notification,
+                numberOfWinners: Int(settingsViewModel.numbersOfWinners.rawValue) ?? 1,
+                countdownValue: $countdownValue
+            )
+            VStack {
+                if let countdownValue = countdownValue {
+                   Text("\(countdownValue)")
+                       .font(.system(size: 80, weight: .bold, design: .rounded))
+                       .foregroundColor(.white)
+                       .transition(.scale.combined(with: .opacity))
+                       .animation(.easeInOut(duration: 0.3), value:  countdownValue)
+                } else {
+                    TitleView(text: "Chooser")
+                    SubTitleView(text: "Put your fingers on the screen")
+                }
             }
-            
-            ForEach(Array(viewModel.circles.keys), id: \.self) { id in
-                if let circle = viewModel.circles[id] {
+         
+            ForEach(Array(homeViewModel.circles.keys), id: \.self) { id in
+                if let circle = homeViewModel.circles[id] {
                     CircleView()
                         .position(circle.position)
                 }
@@ -27,7 +46,7 @@ struct HomeView: View {
         .background(Color.red.ignoresSafeArea())
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                NavigationLink(destination: SettingsView()) {
+                NavigationLink(destination: SettingsView(settingsViewModel: settingsViewModel)) {
                     Image(systemName: "gearshape")
                         .imageScale(.large)
                 }
@@ -35,7 +54,6 @@ struct HomeView: View {
         }
     }
 }
-
 
 #Preview {
     HomeView()

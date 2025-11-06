@@ -16,7 +16,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9838FB342EB89C1300BCA8C8"
-               BuildableName = "cour.app"
+               BuildableName = "Chooser.app"
                BlueprintName = "cour"
                ReferencedContainer = "container:cour.xcodeproj">
             </BuildableReference>
@@ -69,7 +69,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9838FB342EB89C1300BCA8C8"
-            BuildableName = "cour.app"
+            BuildableName = "Chooser.app"
             BlueprintName = "cour"
             ReferencedContainer = "container:cour.xcodeproj">
          </BuildableReference>
@@ -86,7 +86,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9838FB342EB89C1300BCA8C8"
-            BuildableName = "cour.app"
+            BuildableName = "Chooser.app"
             BlueprintName = "cour"
             ReferencedContainer = "container:cour.xcodeproj">
          </BuildableReference>

@@ -14,27 +14,49 @@ struct TouchTrackingView: UIViewRepresentable {
     }
 
     var onUpdate: ([TouchData]) -> Void
+    var notificationsEnabled: Bool
+    var numberOfWinners: Int
+    @Binding var countdownValue: Int?
 
     func makeUIView(context: Context) -> TouchTrackingUIView {
         let view = TouchTrackingUIView()
         view.onUpdate = onUpdate
+        view.notificationsEnabled = notificationsEnabled
+        view.numberOfWinners = numberOfWinners
+        
+        view.onCountdownUpdate = { value in
+            DispatchQueue.main.async {
+              countdownValue = value
+            }
+        }
         return view
     }
 
-    func updateUIView(_ uiView: TouchTrackingUIView, context: Context) {}
+    func updateUIView(_ uiView: TouchTrackingUIView, context: Context) {
+        uiView.notificationsEnabled = notificationsEnabled
+        uiView.numberOfWinners = numberOfWinners
+    }
 }
 
 final class TouchTrackingUIView: UIView {
     var onUpdate: (([TouchTrackingView.TouchData]) -> Void)?
     
+    var notificationsEnabled: Bool = true
+    var numberOfWinners: Int = 1
+    
+    var onCountdownUpdate: ((Int?) -> Void)?
+    
     private var activeTouches: [UITouch: CGPoint] = [:]
     private var initialPositions: [UITouch: CGPoint] = [:]
     
-    private let movementTolerance: CGFloat = 10
+    private let movementTolerance: CGFloat = 0
     private var countdownTimer: Timer?
     private var countdownSeconds = 3
     private var partyInProgress = false
-    private var winnerTouch: UITouch?
+    private var winnerTouches: Set<UITouch> = []
+    
+    private let partyCooldown: TimeInterval = 2.0
+    private var isCooldownActive = false // 👈 new flag
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -45,29 +67,37 @@ final class TouchTrackingUIView: UIView {
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard !partyInProgress else { return } // block new touches during party/cooldown
+
+        if notificationsEnabled {
+            let generator = UIImpactFeedbackGenerator(style: .heavy)
+            generator.impactOccurred()
+        }
+
         for touch in touches {
             let location = touch.location(in: self)
             activeTouches[touch] = location
             initialPositions[touch] = location
         }
+
         sendTouches()
         checkCountdownStart()
     }
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
+            // 👈 during cooldown, only allow winner touches to move
+            if isCooldownActive && !winnerTouches.contains(touch) {
+                continue
+            }
+
             let location = touch.location(in: self)
             if let start = initialPositions[touch] {
                 let distance = hypot(location.x - start.x, location.y - start.y)
                 if distance > movementTolerance {
-                    // Significant movement → reset countdown if not in party
-                    if !partyInProgress {
-                        resetCountdown()
-                    }
                     initialPositions[touch] = location
                     activeTouches[touch] = location
                 } else {
-                    // Minor movement → ignore, keep circle stable
                     activeTouches[touch] = start
                 }
             }
@@ -79,6 +109,7 @@ final class TouchTrackingUIView: UIView {
         for touch in touches {
             activeTouches.removeValue(forKey: touch)
             initialPositions.removeValue(forKey: touch)
+            winnerTouches.remove(touch)
         }
         sendTouches()
         resetCountdownIfNeeded()
@@ -88,6 +119,7 @@ final class TouchTrackingUIView: UIView {
         for touch in touches {
             activeTouches.removeValue(forKey: touch)
             initialPositions.removeValue(forKey: touch)
+            winnerTouches.remove(touch)
         }
         sendTouches()
         resetCountdownIfNeeded()
@@ -100,15 +132,14 @@ final class TouchTrackingUIView: UIView {
         onUpdate?(touchData)
     }
 
-
     private func checkCountdownStart() {
-        guard activeTouches.count >= 2, !partyInProgress else { return }
+        guard activeTouches.count >= numberOfWinners + 1, !partyInProgress else { return }
         resetCountdown()
         startCountdown()
     }
 
     private func resetCountdownIfNeeded() {
-        if activeTouches.count < 2 && !partyInProgress {
+        if activeTouches.count < numberOfWinners + 1 && !partyInProgress {
             resetCountdown()
         }
     }
@@ -117,52 +148,69 @@ final class TouchTrackingUIView: UIView {
         countdownTimer?.invalidate()
         countdownTimer = nil
         countdownSeconds = 3
+        onCountdownUpdate?(nil)
     }
 
     private func startCountdown() {
+        onCountdownUpdate?(countdownSeconds)
         countdownTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] timer in
             guard let self = self else { return }
 
-            if self.activeTouches.count < 2 || self.partyInProgress {
+            if self.activeTouches.count < self.numberOfWinners + 1 || self.partyInProgress {
                 timer.invalidate()
                 self.countdownSeconds = 3
+                self.onCountdownUpdate?(nil)
                 return
             }
 
-            let generator = UIImpactFeedbackGenerator(style: .medium)
-            generator.impactOccurred()
+            if self.notificationsEnabled {
+                let generator = UIImpactFeedbackGenerator(style: .heavy)
+                generator.impactOccurred()
+            }
 
             print("Countdown: \(self.countdownSeconds)")
             self.countdownSeconds -= 1
+            self.onCountdownUpdate?(self.countdownSeconds)
 
             if self.countdownSeconds <= 0 {
                 timer.invalidate()
+                self.onCountdownUpdate?(nil)
                 self.startParty()
             }
         }
     }
 
     private func startParty() {
-        guard activeTouches.count >= 2 else { return }
+        guard activeTouches.count >= numberOfWinners + 1 else { return }
 
         partyInProgress = true
+        isCooldownActive = true
 
-        let winner = activeTouches.randomElement()!
-        winnerTouch = winner.key
-        let winnerPosition = winner.value
+        let allTouches = Array(activeTouches)
+        let shuffled = allTouches.shuffled()
+        let winners = Array(shuffled.prefix(numberOfWinners))
 
-        activeTouches = [winner.key: winnerPosition]
+        winnerTouches = Set(winners.map { $0.key })
+
+        var newActiveTouches: [UITouch: CGPoint] = [:]
+        for (touch, position) in winners {
+            newActiveTouches[touch] = position
+        }
+        activeTouches = newActiveTouches
         sendTouches()
 
-        let generator = UINotificationFeedbackGenerator()
-        generator.notificationOccurred(.success)
+        if notificationsEnabled {
+            let generator = UINotificationFeedbackGenerator()
+            generator.notificationOccurred(.success)
+        }
 
-        print("Party! Winner at: \(winnerPosition)")
+        print("Party! \(numberOfWinners) winner(s) selected")
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + partyCooldown) { [weak self] in
             guard let self = self else { return }
             self.partyInProgress = false
-            self.winnerTouch = nil
+            self.isCooldownActive = false
+            self.winnerTouches.removeAll()
             self.countdownSeconds = 3
         }
     }

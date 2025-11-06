@@ -28,7 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		9838FB352EB89C1300BCA8C8 /* cour.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = cour.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9838FB352EB89C1300BCA8C8 /* Chooser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chooser.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9838FB432EB89C1400BCA8C8 /* courTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = courTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9838FB4D2EB89C1400BCA8C8 /* courUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = courUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -104,7 +104,7 @@
 		9838FB362EB89C1300BCA8C8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9838FB352EB89C1300BCA8C8 /* cour.app */,
+				9838FB352EB89C1300BCA8C8 /* Chooser.app */,
 				9838FB432EB89C1400BCA8C8 /* courTests.xctest */,
 				9838FB4D2EB89C1400BCA8C8 /* courUITests.xctest */,
 			);
@@ -141,7 +141,7 @@
 				985CACC32EBA11A6001B0FBD /* DesignSystem */,
 			);
 			productName = cour;
-			productReference = 9838FB352EB89C1300BCA8C8 /* cour.app */;
+			productReference = 9838FB352EB89C1300BCA8C8 /* Chooser.app */;
 			productType = "com.apple.product-type.application";
 		};
 		9838FB422EB89C1400BCA8C8 /* courTests */ = {
@@ -453,7 +453,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = iim.cour;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Chooser;
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
@@ -495,7 +495,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = iim.cour;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Chooser;
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
