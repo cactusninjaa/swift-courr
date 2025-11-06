@@ -9,5 +9,5 @@ Négatif :
 - Pas de mock
 
 Positif : 
-- Jeu fonctionnel et utilisabl
+- Jeu fonctionnel et utilisable
 - Respect de l'architechture MVVM (je crois)
