@@ -8,11 +8,11 @@
 import SwiftUI
 
 public struct ToggleButtonView: View {
-    @State private var isOn: Bool
+    @Binding public var isOn: Bool
     private var text: String
     
-    public init(isOn: Bool = false, text: String) {
-        self._isOn = State(initialValue: isOn)
+    public init(isOn: Binding<Bool>, text: String) {
+        self._isOn = isOn
         self.text = text
     }
     
@@ -21,11 +21,7 @@ public struct ToggleButtonView: View {
             Text(text)
                 .font(.headline)
         }
-            .toggleStyle(SwitchToggleStyle(tint: .yellow))
-            .padding()
+        .toggleStyle(SwitchToggleStyle(tint: .red))
+        .padding()
     }
-}
-
-#Preview {
-    ToggleButtonView(isOn: false, text: "Hello")
 }

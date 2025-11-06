@@ -11,8 +11,20 @@ public struct CircleView: View {
     public init() {} 
 
     public var body: some View {
-        Circle()
-            .fill(Color.blue.opacity(0.8))
-            .frame(width: 150, height: 150)
+        ZStack{
+            Circle()
+                .fill(Color.white.opacity(1))
+                .frame(width: 150, height: 150)
+            Circle()
+                .fill(Color.red.opacity(1))
+                .frame(width: 130, height: 130)
+            Circle()
+                .fill(Color.white.opacity(1))
+                .frame(width: 110, height: 110)
+        }
     }
+}
+
+#Preview {
+    CircleView()
 }
